@@ -1,5 +1,6 @@
 {
   "name": "serverless-ruby-package",
+  "repository": "https://github.com/joshuaflanagan/serverless-ruby-package",
   "version": "1.0.0",
   "description": "serverless plugin to package ruby gems",
   "main": "index.js",
