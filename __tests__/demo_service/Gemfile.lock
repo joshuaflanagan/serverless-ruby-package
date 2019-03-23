@@ -1,0 +1,19 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    redis (4.1.0)
+    redis-namespace (1.6.0)
+      redis (>= 3.0.4)
+    rspec-core (3.8.0)
+      rspec-support (~> 3.8.0)
+    rspec-support (3.8.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  redis-namespace
+  rspec-core
+
+BUNDLED WITH
+   1.16.2

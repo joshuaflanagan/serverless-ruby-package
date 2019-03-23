@@ -1,0 +1,14 @@
+{
+  "name": "serverless-ruby-package",
+  "version": "1.0.0",
+  "description": "serverless plugin to package ruby gems",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Joshua Flanagan",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^24.5.0"
+  }
+}

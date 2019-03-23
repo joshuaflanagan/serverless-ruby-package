@@ -1,0 +1,12 @@
+{
+  "name": "demo-project",
+  "version": "1.0.0",
+  "description": "Used for integration tests",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo 'nope'"
+  },
+  "devDependencies": {
+    "serverless": "^1.39.1"
+  }
+}
