@@ -21,7 +21,7 @@ class PackageRubyBundlePlugin {
       gems = Bundler.definition.specs_for([:default]).reject{|s| s.name=='bundler'}
       paths = gems.map(&:full_gem_path)
       root = ENV['GEM_HOME']
-      relative = paths.map{|p| p.split(root).last}
+      relative = paths.map{|p| p.split(root).last}.sort
       puts relative`
 
     this.serverless.service.package.exclude = ["**"]; // force whitelist

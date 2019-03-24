@@ -3,7 +3,9 @@
 source "https://rubygems.org"
 
 gem "redis-namespace"
+gem "http"
 
 group :development do
   gem "rspec-core"
+  gem "sqlite3"
 end
