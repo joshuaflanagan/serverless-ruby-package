@@ -3,6 +3,20 @@
 Teaches the [serverless framework](https://serverless.com/framework/) how to
 package ruby services and their gem dependencies.
 
+By default, `serverless` will package _all_ files in your ruby service project.
+That includes test files, `node_modules`, readmes, etc. You don't need any of
+those files to execute your function - they just increase the size of the package
+and slow down updates. In most cases, it also won't include any rubygems that
+your function depends on, so the function will not work once it is deployed.
+
+This plugin solves those problems in a couple ways. First, it excludes _all_
+files by default, forcing you to whitelist the files needed by your function
+(using the `package/includes` key in `serverless.yml`). Second, it automatically
+packages the gems from your default bundler group -- skipping gems from
+any custom groups, like `development` or `test`. Sometimes gems themselves will
+install their own test files - those will also be excluded from the package.
+
+
 ## Usage
 
 The plugin will make it easier to work with rubygems in your serverless project,
@@ -38,6 +52,7 @@ by default. You need to explicitly add your service handler file to `serverless.
 
 ```yaml
 package:
+  excludeDevDependencies: false # only applies to node
   include:
     - handler.rb
 ```
