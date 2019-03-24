@@ -14,9 +14,6 @@ GEM
       domain_name (~> 0.5)
     http-form_data (2.1.1)
     http_parser.rb (0.6.0)
-    mini_portile2 (2.4.0)
-    nokogiri (1.10.1)
-      mini_portile2 (~> 2.4.0)
     public_suffix (3.0.3)
     redis (4.1.0)
     redis-namespace (1.6.0)
@@ -34,7 +31,6 @@ PLATFORMS
 
 DEPENDENCIES
   http
-  nokogiri
   redis-namespace
   rspec-core
   sqlite3
