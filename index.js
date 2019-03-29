@@ -14,6 +14,10 @@ class PackageRubyBundlePlugin {
     };
   }
 
+  log(message){
+    this.serverless.cli.log(message, "ruby-package");
+  }
+
   beforePackage(){
     const gemRoot = "vendor/bundle/ruby/2.5.0"; //TODO: infer? configure?
     const extensionDir = `${gemRoot}/extensions/x86_64-linux/2.5.0-static/`;
@@ -40,9 +44,9 @@ class PackageRubyBundlePlugin {
     const gems = JSON.parse(output)
 
     if (gems.length < 10) {
-      this.serverless.cli.log(`Bundling gems: ${gems.map(x=>x.name).join(" ")}`);
+      this.log(`Bundling gems: ${gems.map(x=>x.name).join(" ")}`);
     } else {
-      this.serverless.cli.log(`Bundling ${gems.length} gems`);
+      this.log(`Bundling ${gems.length} gems`);
     }
 
     gems.forEach((gem) =>{
