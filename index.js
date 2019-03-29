@@ -42,7 +42,7 @@ class PackageRubyBundlePlugin {
     this.serverless.service.package.exclude = ["**"]; // force whitelist
     this.serverless.service.package.include.push("vendor/bundle/bundler/**"); // bundler standalone files
 
-    const gemFilePath = this.serverless.config.servicePath + "/Gemfile"
+    const gemFilePath = path.join(this.serverless.config.servicePath, "Gemfile");
     const output = execSync(`BUNDLE_GEMFILE=${gemFilePath} bundle exec ruby`, {input: identifyGemsScript});
     const gems = JSON.parse(output)
 
@@ -53,9 +53,9 @@ class PackageRubyBundlePlugin {
     }
 
     if (gems.length < 10) {
-      this.log(`Bundling gems: ${gems.map(x=>x.name).join(" ")}`);
+      this.log(`Packaging gems: ${gems.map(x=>x.name).join(" ")}`);
     } else {
-      this.log(`Bundling ${gems.length} gems`);
+      this.log(`Packaging ${gems.length} gems`);
     }
 
     gems.forEach((gem) =>{
