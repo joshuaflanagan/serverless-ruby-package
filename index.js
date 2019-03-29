@@ -45,6 +45,12 @@ class PackageRubyBundlePlugin {
     const output = execSync(`BUNDLE_GEMFILE=${gemFilePath} bundle exec ruby`, {input: identifyGemsScript});
     const gems = JSON.parse(output)
 
+    if (gems.some(x=>x.extensions)){
+      if (process.platform != "linux"){
+        this.nativeLinuxBundle();
+      }
+    }
+
     if (gems.length < 10) {
       this.log(`Bundling gems: ${gems.map(x=>x.name).join(" ")}`);
     } else {
@@ -67,6 +73,12 @@ class PackageRubyBundlePlugin {
         this.serverless.service.package.include.push(`!${gemRoot}${gem.path}/spec/**`);
       }
     });
+  }
+
+  nativeLinuxBundle(){
+    this.log(`Building gems with native extensions for linux`);
+    const localPath = this.serverless.config.servicePath;
+    execSync(`docker run --rm -v "${localPath}:/var/task" lambci/lambda:build-ruby2.5 bundle install --standalone --path vendor/bundle`)
   }
 
   warnOnUnsupportedRuntime(){
