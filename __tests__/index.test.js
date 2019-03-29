@@ -17,6 +17,10 @@ beforeEach(()=>{
       package: {
         include: ["handler.rb", "lib/**"],
         exclude: ["mytest.rb"]
+      },
+      provider: {
+        name: "aws",
+        runtime: "ruby2.5"
       }
     }
   }

@@ -19,6 +19,8 @@ class PackageRubyBundlePlugin {
   }
 
   beforePackage(){
+    this.warnOnUnsupportedRuntime();
+
     const gemRoot = "vendor/bundle/ruby/2.5.0"; //TODO: infer? configure?
     const extensionDir = `${gemRoot}/extensions/x86_64-linux/2.5.0-static/`;
     const excludeGemTests = true; //TODO: make configurable
@@ -65,6 +67,16 @@ class PackageRubyBundlePlugin {
         this.serverless.service.package.include.push(`!${gemRoot}${gem.path}/spec/**`);
       }
     });
+  }
+
+  warnOnUnsupportedRuntime(){
+    if (this.serverless.service.provider.name != 'aws'){
+      this.log(`WARNING: serverless-ruby-package has only been tested with the AWS provider. It may not work with ${this.serverless.service.provider.name}, but bug reports are welcome.`);
+      return;
+    }
+    if (this.serverless.service.provider.runtime != 'ruby2.5'){
+      this.log(`WARNING: serverless-ruby-package has only been tested with the ruby2.5 runtime. It may not work with ${this.serverless.service.provider.runtime}, but bug reports are welcome.`);
+    }
   }
 }
 
