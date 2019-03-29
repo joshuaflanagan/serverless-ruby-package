@@ -45,6 +45,11 @@ test("hooks in before packaging an individual function", () => {
   expect(Object.keys(plugin.hooks)).toContain("before:package:function:package");
 });
 
+test("disables 'Excluding development dependencies', which only applies to node projects", () =>{
+  plugin.beforePackage();
+  expect(plugin.serverless.service.package.excludeDevDependencies).toBe(false);
+});
+
 test("forces whitelisting files to package by excluding all files by default", () =>{
   plugin.beforePackage();
   expect(plugin.serverless.service.package.exclude).toEqual(["**"]);

@@ -38,6 +38,7 @@ class PackageRubyBundlePlugin {
       puts JSON.generate(details.sort_by{|x| x[:name]})
     `
 
+    this.serverless.service.package.excludeDevDependencies = false; // only relevant to nodejs
     this.serverless.service.package.exclude = ["**"]; // force whitelist
     this.serverless.service.package.include.push("vendor/bundle/bundler/**"); // bundler standalone files
 
