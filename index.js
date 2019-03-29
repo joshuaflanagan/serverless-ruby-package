@@ -4,6 +4,19 @@ const path = require("path");
 const { execSync } = require('child_process');
 
 class PackageRubyBundlePlugin {
+  get config() {
+    const config = Object.assign(
+      {
+        alwaysCrossCompileExtensions: true,
+      },
+      (
+        this.serverless.service.custom &&
+        this.serverless.service.custom.rubyPackage
+      ) || {}
+    );
+    return config;
+  }
+
   constructor(serverless, options) {
     this.serverless = serverless;
     this.options = options;
@@ -47,7 +60,7 @@ class PackageRubyBundlePlugin {
     const gems = JSON.parse(output)
 
     if (gems.some(x=>x.extensions)){
-      if (process.platform != "linux"){
+      if (process.platform != "linux" && this.config.alwaysCrossCompileExtensions){
         this.nativeLinuxBundle();
       }
     }

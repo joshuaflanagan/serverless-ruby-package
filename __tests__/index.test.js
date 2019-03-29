@@ -21,6 +21,11 @@ beforeEach(()=>{
       provider: {
         name: "aws",
         runtime: "ruby2.5"
+      },
+      custom: {
+        rubyPackage: {
+          alwaysCrossCompileExtensions: false,
+        }
       }
     }
   }
