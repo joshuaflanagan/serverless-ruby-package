@@ -56,7 +56,10 @@ class PackageRubyBundlePlugin {
     this.serverless.service.package.include.push("vendor/bundle/bundler/**"); // bundler standalone files
 
     const gemFilePath = path.join(this.serverless.config.servicePath, "Gemfile");
-    const output = execSync(`BUNDLE_GEMFILE=${gemFilePath} bundle exec ruby`, {input: identifyGemsScript});
+    const bundleEnv = Object.assign({
+      "BUNDLE_GEMFILE": gemFilePath
+    }, process.env);
+    const output = execSync("bundle exec ruby", {input: identifyGemsScript, env: bundleEnv});
     const gems = JSON.parse(output)
 
     if (gems.some(x=>x.extensions)){
