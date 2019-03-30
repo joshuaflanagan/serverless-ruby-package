@@ -25,9 +25,11 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.5)
+    unf_ext (0.0.7.5-x64-mingw32)
 
 PLATFORMS
   ruby
+  x64-mingw32
 
 DEPENDENCIES
   http
