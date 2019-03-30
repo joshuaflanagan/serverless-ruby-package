@@ -8,6 +8,7 @@ class PackageRubyBundlePlugin {
     const config = Object.assign(
       {
         alwaysCrossCompileExtensions: true,
+        debug: !!process.env.SRP_DEBUG,
       },
       (
         this.serverless.service.custom &&
@@ -99,6 +100,11 @@ class PackageRubyBundlePlugin {
   }
 
   warnOnUnsupportedRuntime(){
+    if (this.config.debug){
+      this.log(`platform: ${process.platform}`);
+      this.log(`provider: ${this.serverless.service.provider.name}`);
+      this.log(`runtime: ${this.serverless.service.provider.runtime}`);
+    }
     if (this.serverless.service.provider.name != 'aws'){
       this.log(`WARNING: serverless-ruby-package has only been tested with the AWS provider. It may not work with ${this.serverless.service.provider.name}, but bug reports are welcome.`);
       return;
