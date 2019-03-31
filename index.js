@@ -2,6 +2,7 @@
 
 const path = require("path");
 const { execSync } = require('child_process');
+const fs = require('fs');
 
 class PackageRubyBundlePlugin {
   get config() {
@@ -36,7 +37,9 @@ class PackageRubyBundlePlugin {
     this.warnOnUnsupportedRuntime();
 
     const gemRoot = "vendor/bundle/ruby/2.5.0"; //TODO: infer? configure?
-    const extensionDir = `${gemRoot}/extensions/x86_64-linux/2.5.0-static/`;
+    const extensionDir = `${gemRoot}/extensions/x86_64-linux/2.5.0-static`;
+    const extensionsRequireCrossCompile = process.platform != "linux"
+
     const excludeGemTests = true; //TODO: make configurable
     const identifyGemsScript = `
       require 'json'
@@ -64,8 +67,22 @@ class PackageRubyBundlePlugin {
     const gems = JSON.parse(output)
 
     if (gems.some(x=>x.extensions)){
-      if (process.platform != "linux" && this.config.alwaysCrossCompileExtensions){
-        this.nativeLinuxBundle();
+      if (extensionsRequireCrossCompile){
+        // puts Gem.extension_api_version # => 2.5.0-static
+        if (this.config.alwaysCrossCompileExtensions){
+          this.nativeLinuxBundle();
+        }
+      } else {
+        // developing on linux
+        // TODO: determine *actual* extensions dir, and map it to expected dir
+        // puts Gem.extension_api_version # => 2.5.0
+        // puts Bundler.definition.specs.detect{|s| s.extensions.any?}.extensions_dir
+        // assuming the *actual* will be in 2.5.0, but lambda will expect it in 2.5.0-stable
+        if (!fs.existsSync(extensionDir)){
+          this.log(`Making extensions available at ${extensionDir}`);
+          const absoluteTarget = path.join(this.serverless.config.servicePath, gemRoot, "extensions/x86_64-linux/2.5.0");
+          fs.symlinkSync(absoluteTarget, extensionDir, "dir")
+        }
       }
     }
 
@@ -78,7 +95,7 @@ class PackageRubyBundlePlugin {
     gems.forEach((gem) =>{
       this.serverless.service.package.include.push(`${gemRoot}${gem.path}/**`);
       if (gem.extensions){
-        this.serverless.service.package.include.push(`${extensionDir}${gem.name}/**`);
+        this.serverless.service.package.include.push(`${extensionDir}/${gem.name}/**`);
       }
 
       // includes that start with a ! are treated as excludes when evaluating,
