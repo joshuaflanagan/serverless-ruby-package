@@ -16,6 +16,13 @@ packages the gems from your default bundler group -- skipping gems from
 any custom groups, like `development` or `test`. Sometimes gems themselves will
 install their own test files - those will also be excluded from the package.
 
+It also handles cross-compiling any gems with native extensions. For example,
+if you are developing your service on macOS, any gems with native extensions
+will be compiled locally for macOS. But to deploy to a provider like AWS Lambda,
+the gems need to be compiled for linux. The plugin will automatically detect
+this situation and build the extensions for linux using a local docker container.
+You only need to have [docker](https://www.docker.com) installed with the daemon running.
+
 
 ## Usage
 
@@ -52,7 +59,6 @@ by default. You need to explicitly add your service handler file to `serverless.
 
 ```yaml
 package:
-  excludeDevDependencies: false # only applies to node
   include:
     - handler.rb
 ```
@@ -85,6 +91,11 @@ Build your package to confirm it is being built as expected:
 ```
 serverless package
 ```
+
+> Note - if you have gems with native extensions, and are not developing on
+linux, make sure have docker installed and running. The first time you package
+may take a really long time as the docker image is downloaded. Future packaging
+will be much faster.
 
 That will create the package that is uploaded during a `serverless deploy`, but
 keep it around so you can examine it. You can use the following command to verify
