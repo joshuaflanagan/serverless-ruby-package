@@ -38,7 +38,6 @@ class PackageRubyBundlePlugin {
 
     const gemRoot = "vendor/bundle/ruby/2.5.0"; //TODO: infer? configure?
     const extensionDir = `${gemRoot}/extensions/x86_64-linux/2.5.0-static`;
-    const extensionsRequireCrossCompile = process.platform != "linux"
 
     const excludeGemTests = true; //TODO: make configurable
     const identifyGemsScript = `
@@ -67,22 +66,9 @@ class PackageRubyBundlePlugin {
     const gems = JSON.parse(output)
 
     if (gems.some(x=>x.extensions)){
-      if (extensionsRequireCrossCompile){
-        // puts Gem.extension_api_version # => 2.5.0-static
-        if (this.config.alwaysCrossCompileExtensions){
-          this.nativeLinuxBundle();
-        }
-      } else {
-        // developing on linux
-        // TODO: determine *actual* extensions dir, and map it to expected dir
-        // puts Gem.extension_api_version # => 2.5.0
-        // puts Bundler.definition.specs.detect{|s| s.extensions.any?}.extensions_dir
-        // assuming the *actual* will be in 2.5.0, but lambda will expect it in 2.5.0-stable
-        if (!fs.existsSync(extensionDir)){
-          this.log(`Making extensions available at ${extensionDir}`);
-          const absoluteTarget = path.join(this.serverless.config.servicePath, gemRoot, "extensions/x86_64-linux/2.5.0");
-          fs.symlinkSync(absoluteTarget, extensionDir, "dir")
-        }
+      // puts Gem.extension_api_version # => 2.5.0-static
+      if (this.config.alwaysCrossCompileExtensions){
+        this.nativeLinuxBundle();
       }
     }
 
