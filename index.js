@@ -58,7 +58,9 @@ class PackageRubyBundlePlugin {
     this.serverless.service.package.exclude = ["**"]; // force whitelist
     this.serverless.service.package.include.push("vendor/bundle/bundler/**"); // bundler standalone files
 
-    const gemFilePath = path.join(this.serverless.config.servicePath, "Gemfile");
+    const gemFilePath = ['Gemfile', 'gems.rb']
+      .map(filename => path.join(this.serverless.config.servicePath, filename))
+      .find(fullpath => fs.existsSync(fullpath))
     const bundleEnv = Object.assign({
       "BUNDLE_GEMFILE": gemFilePath
     }, process.env);
