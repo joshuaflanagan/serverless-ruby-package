@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.2.0
+Add support for `CROSS_COMPILE_EXTENSIONS` environment variable.
+
+Update lodash and mixin-deep transitive dependencies, to address security vulnerabilities.
+
+## 1.1.2
+
+Update js-yaml transitive dependency to address security vulnerability.
+
 ## 1.1.1
 
 Compile gems with native extensions using docker, even when developing on linux.
