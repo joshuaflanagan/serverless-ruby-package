@@ -16,6 +16,12 @@ class PackageRubyBundlePlugin {
         this.serverless.service.custom.rubyPackage
       ) || {}
     );
+    // give precedence to environment variable, if set
+    if (typeof(process.env.CROSS_COMPILE_EXTENSIONS) !== 'undefined'){
+      const override = (/^(?:y|yes|true|1|on)$/i.test(process.env.CROSS_COMPILE_EXTENSIONS));
+      config.alwaysCrossCompileExtensions = override;
+    }
+
     return config;
   }
 

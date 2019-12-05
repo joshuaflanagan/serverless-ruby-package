@@ -105,6 +105,26 @@ it only includes the files you expect:
 unzip -l .serverless/<servicename>.zip
 ```
 
+## Configuration
+
+By default, if any gems have native extensions, they will be compiled for the
+AWS Lambda Linux using Docker.
+
+You can override the default behavior by adding to your `serverless.yml` file:
+
+```
+custom:
+  rubyPackage:
+    alwaysCrossCompileExtensions: false
+```
+
+You can also override this behavior using environment variable. If you set the
+environment variable, it will have precedence over the `serverless.yml` file:
+
+```
+CROSS_COMPILE_EXTENSIONS=false serverless package
+```
+
 
 ## Development
 
