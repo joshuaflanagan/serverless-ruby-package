@@ -9,6 +9,7 @@ class PackageRubyBundlePlugin {
     const config = Object.assign(
       {
         alwaysCrossCompileExtensions: true,
+        dockerImage: 'lambci/lambda:build-ruby2.5',
         debug: !!process.env.SRP_DEBUG,
       },
       (
@@ -17,9 +18,9 @@ class PackageRubyBundlePlugin {
       ) || {}
     );
     // give precedence to environment variable, if set
-    if (typeof(process.env.CROSS_COMPILE_EXTENSIONS) !== 'undefined'){
-      const override = (/^(?:y|yes|true|1|on)$/i.test(process.env.CROSS_COMPILE_EXTENSIONS));
-      config.alwaysCrossCompileExtensions = override;
+    if (typeof(process.env.cross_compile_extensions) !== 'undefined'){
+      const override = (/^(?:y|yes|true|1|on)$/i.test(process.env.cross_compile_extensions));
+      config.alwayscrosscompileextensions = override;
     }
 
     return config;
@@ -105,7 +106,8 @@ class PackageRubyBundlePlugin {
   nativeLinuxBundle(){
     this.log(`Building gems with native extensions for linux`);
     const localPath = this.serverless.config.servicePath;
-    execSync(`docker run --rm -v "${localPath}:/var/task" lambci/lambda:build-ruby2.5 bundle install --standalone --path vendor/bundle`)
+    const dockerImage = this.config.dockerImage;
+    execSync(`docker run --rm -v "${localPath}:/var/task" ${dockerImage} bundle install --standalone --path vendor/bundle`)
   }
 
   warnOnUnsupportedRuntime(){
