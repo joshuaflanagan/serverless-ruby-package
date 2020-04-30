@@ -14,7 +14,8 @@ class PackageRubyBundlePlugin {
       },
       (
         this.serverless.service.custom &&
-        this.serverless.service.custom.rubyPackage
+        this.serverless.service.custom.rubyPackage,
+        this.serverless.service.custom.dockerImage
       ) || {}
     );
     // give precedence to environment variable, if set
