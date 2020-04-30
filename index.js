@@ -9,11 +9,14 @@ class PackageRubyBundlePlugin {
     const config = Object.assign(
       {
         alwaysCrossCompileExtensions: true,
+        dockerImage: 'lambci/lambda:build-ruby2.5',
         debug: !!process.env.SRP_DEBUG,
       },
       (
         this.serverless.service.custom &&
-        this.serverless.service.custom.rubyPackage
+        this.serverless.service.custom.rubyPackage,
+        this.serverless.service.custom &&
+        this.serverless.service.custom.dockerImage
       ) || {}
     );
     // give precedence to environment variable, if set
@@ -105,7 +108,8 @@ class PackageRubyBundlePlugin {
   nativeLinuxBundle(){
     this.log(`Building gems with native extensions for linux`);
     const localPath = this.serverless.config.servicePath;
-    execSync(`docker run --rm -v "${localPath}:/var/task" lambci/lambda:build-ruby2.5 bundle install --standalone --path vendor/bundle`)
+    const dockerImage = this.config.dockerImage;
+    execSync(`docker run --rm -v "${localPath}:/var/task" ${dockerImage} bundle install --standalone --path vendor/bundle`)
   }
 
   warnOnUnsupportedRuntime(){
