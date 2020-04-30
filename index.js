@@ -15,6 +15,7 @@ class PackageRubyBundlePlugin {
       (
         this.serverless.service.custom &&
         this.serverless.service.custom.rubyPackage,
+        this.serverless.service.custom &&
         this.serverless.service.custom.dockerImage
       ) || {}
     );
