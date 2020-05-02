@@ -137,3 +137,14 @@ yarn test               # run the automated test suite
 
 ./integration_test.sh   # run serverless package on the demo project and observe the results
 ```
+
+### Troubleshooting the demo_service
+
+* Make sure the version of bundler specified in the demo_service Gemfile.lock
+is compatible with the version installed in the lambci/lambda:build-ruby2.5 image.
+
+* Make sure you can invoke the function n in the docker image:
+
+```
+./invoke-service.sh
+```
