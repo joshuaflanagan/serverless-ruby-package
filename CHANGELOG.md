@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.3.0
+Add support for specifying a custom docker image for building native extensions.
+
 ## 1.2.0
 Add support for `CROSS_COMPILE_EXTENSIONS` environment variable.
 

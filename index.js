@@ -107,6 +107,9 @@ class PackageRubyBundlePlugin {
     this.log(`Building gems with native extensions for linux`);
     const localPath = this.serverless.config.servicePath;
     const dockerImage = this.config.dockerImage;
+    if (this.config.debug){
+      this.log(`docker image: ${dockerImage}`);
+    }
     execSync(`docker run --rm -v "${localPath}:/var/task" ${dockerImage} bundle install --standalone --path vendor/bundle`)
   }
 

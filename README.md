@@ -125,6 +125,17 @@ environment variable, it will have precedence over the `serverless.yml` file:
 CROSS_COMPILE_EXTENSIONS=false serverless package
 ```
 
+By default, native extensions will be built using the lambci/lambda:build-ruby2.5
+docker image, which should accurately reflect the AWS Lambda ruby environment.
+To use a different image, override it in your `serverless.yml` file:
+
+```
+custom:
+  rubyPackage:
+    dockerImage: lambci/lambda:build-ruby2.7
+```
+
+
 
 ## Development
 
