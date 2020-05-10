@@ -9,7 +9,6 @@ class PackageRubyBundlePlugin {
     const config = Object.assign(
       {
         alwaysCrossCompileExtensions: true,
-        dockerImage: 'lambci/lambda:build-ruby2.5',
         debug: !!process.env.SRP_DEBUG,
       },
       (
@@ -40,11 +39,31 @@ class PackageRubyBundlePlugin {
     this.serverless.cli.log(message, "ruby-package");
   }
 
+  rubyVersion() {
+    // RbConfig::CONFIG['ruby_version']
+    switch (this.serverless.service.provider.runtime) {
+      case 'ruby2.5':
+        return '2.5.0';
+      default:
+        return '2.7.0';
+    }
+  }
+
+  extensionApiVersion() {
+    // Gem.extension_api_version
+    switch (this.serverless.service.provider.runtime) {
+      case 'ruby2.5':
+        return '2.5.0-static';
+      default:
+        return '2.7.0';
+    }
+  }
+
   beforePackage(){
     this.warnOnUnsupportedRuntime();
 
-    const gemRoot = "vendor/bundle/ruby/2.5.0"; //TODO: infer? configure?
-    const extensionDir = `${gemRoot}/extensions/x86_64-linux/2.5.0-static`;
+    const gemRoot = `vendor/bundle/ruby/${this.rubyVersion()}`;
+    const extensionDir = `${gemRoot}/extensions/x86_64-linux/${this.extensionApiVersion()}`;
 
     const excludeGemTests = true; //TODO: make configurable
     const identifyGemsScript = `
@@ -73,7 +92,6 @@ class PackageRubyBundlePlugin {
     const gems = JSON.parse(output)
 
     if (gems.some(x=>x.extensions)){
-      // puts Gem.extension_api_version # => 2.5.0-static
       if (this.config.alwaysCrossCompileExtensions){
         this.nativeLinuxBundle();
       }
@@ -103,10 +121,22 @@ class PackageRubyBundlePlugin {
     });
   }
 
+  dockerImage() {
+    if (this.config.dockerImage)
+      return this.config.dockerImage;
+
+    switch (this.serverless.service.provider.runtime) {
+      case 'ruby2.5':
+        return 'lambci/lambda:build-ruby2.5';
+      default:
+        return 'lambci/lambda:build-ruby2.7';
+    }
+  }
+
   nativeLinuxBundle(){
     this.log(`Building gems with native extensions for linux`);
     const localPath = this.serverless.config.servicePath;
-    const dockerImage = this.config.dockerImage;
+    const dockerImage = this.dockerImage();
     if (this.config.debug){
       this.log(`docker image: ${dockerImage}`);
     }
@@ -123,8 +153,8 @@ class PackageRubyBundlePlugin {
       this.log(`WARNING: serverless-ruby-package has only been tested with the AWS provider. It may not work with ${this.serverless.service.provider.name}, but bug reports are welcome.`);
       return;
     }
-    if (this.serverless.service.provider.runtime != 'ruby2.5'){
-      this.log(`WARNING: serverless-ruby-package has only been tested with the ruby2.5 runtime. It may not work with ${this.serverless.service.provider.runtime}, but bug reports are welcome.`);
+    if (!['ruby2.5', 'ruby2.7'].includes(this.serverless.service.provider.runtime)){
+      this.log(`WARNING: serverless-ruby-package has only been tested with the ruby2.5 and the ruby2.7 runtimes. It may not work with ${this.serverless.service.provider.runtime}, but bug reports are welcome.`);
     }
   }
 }
