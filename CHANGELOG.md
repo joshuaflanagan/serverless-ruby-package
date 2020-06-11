@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.4.0
+Add support for ruby 2.7 runtime (Thank you kmfukuda)
+
 ## 1.3.0
 Add support for specifying a custom docker image for building native extensions.
 
