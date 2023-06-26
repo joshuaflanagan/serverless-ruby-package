@@ -42,20 +42,20 @@ class PackageRubyBundlePlugin {
   rubyVersion() {
     // RbConfig::CONFIG['ruby_version']
     switch (this.serverless.service.provider.runtime) {
-      case 'ruby2.5':
-        return '2.5.0';
-      default:
+      case 'ruby2.7':
         return '2.7.0';
+      default:
+        return '3.2.0';
     }
   }
 
   extensionApiVersion() {
     // Gem.extension_api_version
     switch (this.serverless.service.provider.runtime) {
-      case 'ruby2.5':
-        return '2.5.0-static';
-      default:
+      case 'ruby2.7':
         return '2.7.0';
+      default:
+        return '3.2.0';
     }
   }
 
@@ -121,29 +121,26 @@ class PackageRubyBundlePlugin {
     });
   }
 
-  dockerImage() {
-    if (this.config.dockerImage)
-      return this.config.dockerImage;
-
-    switch (this.serverless.service.provider.runtime) {
-      case 'ruby2.5':
-        return 'lambci/lambda:build-ruby2.5';
-      default:
-        return 'lambci/lambda:build-ruby2.7';
-    }
-  }
-
   nativeLinuxBundle(){
     this.log(`Building gems with native extensions for linux`);
     const localPath = this.serverless.config.servicePath;
-    const dockerImage = this.dockerImage();
+    const imageTag = this.serverless.service.provider.runtime.slice(-3);
+    const dockerImage = `amazon/aws-lambda-ruby:${imageTag}`;
+    const command = `docker run --rm \
+                                --volume "${localPath}:/var/task" \
+                                --entrypoint '/var/task/bin/build-gems' \
+                                ${dockerImage}`
+
     if (this.config.debug){
       this.log(`docker image: ${dockerImage}`);
+      this.log(`command: ${command}`);
     }
-    execSync(`docker run --rm -v "${localPath}:/var/task" ${dockerImage} bundle install --standalone --path vendor/bundle`)
+    execSync(command)
   }
 
   warnOnUnsupportedRuntime(){
+    const runtimes = ['ruby2.7', 'ruby3.2'];
+
     if (this.config.debug){
       this.log(`platform: ${process.platform}`);
       this.log(`provider: ${this.serverless.service.provider.name}`);
@@ -153,8 +150,9 @@ class PackageRubyBundlePlugin {
       this.log(`WARNING: serverless-ruby-package has only been tested with the AWS provider. It may not work with ${this.serverless.service.provider.name}, but bug reports are welcome.`);
       return;
     }
-    if (!['ruby2.5', 'ruby2.7'].includes(this.serverless.service.provider.runtime)){
-      this.log(`WARNING: serverless-ruby-package has only been tested with the ruby2.5 and the ruby2.7 runtimes. It may not work with ${this.serverless.service.provider.runtime}, but bug reports are welcome.`);
+
+    if (!runtimes.includes(this.serverless.service.provider.runtime)){
+      this.log(`WARNING: serverless-ruby-package has only been tested with the following ruby runtimes: ${runtimes.join(', ')}.  It may not work with ${this.serverless.service.provider.runtime}, but bug reports are welcome.`);
     }
   }
 }

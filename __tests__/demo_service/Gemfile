@@ -2,10 +2,11 @@
 
 source "https://rubygems.org"
 
-gem "redis-namespace"
-gem "http"
+gem 'redis-namespace'
+gem 'http'  # exercises dependency on libffi
+gem 'psych' # exercises dependency on libyaml
 
 group :development do
-  gem "rspec-core"
-  gem "nio4r"
+  gem 'rspec-core'
+  gem 'nio4r'
 end
