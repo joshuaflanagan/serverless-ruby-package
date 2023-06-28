@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.7.0
+
+No behavior changes. Switching to a version strategy that where the first two
+digits match the default ruby runtime version. Additional revisions to the
+package will only increment the third part of the version number.
+
 ## 1.4.0
 Add support for ruby 2.7 runtime (Thank you kmfukuda)
 
