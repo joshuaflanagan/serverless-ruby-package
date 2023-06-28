@@ -1,6 +1,8 @@
+set -e
+
 pushd __tests__/demo_service
 echo '### BUILD PACKAGE'
-serverless package
+yarn run serverless package
 echo
 echo '### 1) EXAMINE PACKAGE'
 unzip -l .serverless/demo.zip

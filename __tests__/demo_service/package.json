@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "description": "Used for integration tests",
   "main": "main.js",
+  "license": "UNLICENSED",
+  "private": true,
   "scripts": {
     "test": "echo 'nope'"
   },
