@@ -159,3 +159,11 @@ is compatible with the version installed in the lambci/lambda:build-ruby2.5 imag
 ```
 ./invoke-service.sh
 ```
+
+### Releasing a new version
+
+* Commit a description of the changes in CHANGELOG.md
+
+* Run `yarn publish`. It will prompt for the new version number, and npm credentials.
+It will create a new commit and tag with the version number changes. Make sure
+to push them.
