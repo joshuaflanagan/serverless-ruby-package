@@ -128,8 +128,9 @@ class PackageRubyBundlePlugin {
     const dockerImage = `amazon/aws-lambda-ruby:${imageTag}`;
     const command = `docker run --rm \
                                 --volume "${localPath}:/var/task" \
-                                --entrypoint '/var/task/bin/build-gems' \
-                                ${dockerImage}`
+                                --entrypoint '/bin/bash' \
+                                ${dockerImage} \
+                                '/var/task/node_modules/serverless-ruby-package/build-gems.sh'`
 
     if (this.config.debug){
       this.log(`docker image: ${dockerImage}`);

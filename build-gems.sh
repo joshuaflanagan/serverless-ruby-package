@@ -1,7 +1,6 @@
 #!/bin/bash
 set -euo pipefail
 
-
 # script to build gems within amazon linux lambda containers
 echo '## INSTALLING PACKAGES ##'
 yum update -y
