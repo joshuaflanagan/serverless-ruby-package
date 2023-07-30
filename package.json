@@ -9,6 +9,10 @@
   },
   "author": "Joshua Flanagan",
   "license": "MIT",
+  "files": [
+    "index.js",
+    "build-gems.sh"
+  ],
   "devDependencies": {
     "jest": "^24.5.0",
     "serverless": "^3.33.0"

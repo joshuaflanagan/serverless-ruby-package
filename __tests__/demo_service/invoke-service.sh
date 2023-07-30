@@ -1,1 +1,6 @@
-docker run --rm -v $(dirname $(realpath $0)):/var/task lambci/lambda:build-ruby2.5 ruby -I. -rhandler -e "puts hello(event:{},context:{})"
+  docker run --rm                                                     \
+             --volume $(pwd):/var/task                                \
+             --env RUBYLIB=/var/task                                  \
+             --entrypoint '/var/lang/bin/ruby'                        \
+             $RUBY_IMAGE                                              \
+             '-e require "handler"; puts hello(event:{},context:{})'
