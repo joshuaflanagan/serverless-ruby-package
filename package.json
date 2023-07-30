@@ -1,7 +1,7 @@
 {
   "name": "serverless-ruby-package",
   "repository": "https://github.com/joshuaflanagan/serverless-ruby-package",
-  "version": "2.7.0",
+  "version": "3.2.0",
   "description": "serverless plugin to package ruby gems",
   "main": "index.js",
   "scripts": {
