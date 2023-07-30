@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.2.0
+
+Default to ruby 3.2.
+
+Switched to using official Amazon Linux docker images.
+
+Removed the ability to configure your own docker image to build native gems.
+
 ## 2.7.0
 
 No behavior changes. Switching to a version strategy that where the first two
