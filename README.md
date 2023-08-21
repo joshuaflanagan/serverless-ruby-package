@@ -134,7 +134,7 @@ To work on this plugin, you should first run the following in your local directo
 
 yarn test               # run the automated test suite
 
-./integration_test.sh   # run serverless package on the demo project and observe the results
+./integration-test.sh   # run serverless package on the demo project and observe the results
 ```
 
 ### Troubleshooting the demo_service

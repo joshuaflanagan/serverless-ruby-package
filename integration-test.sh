@@ -15,6 +15,7 @@ function test_version() {
   echo "## VERIFY RUBY ${version} FUNCTION CAN LOAD DEPENDENCIES"
   #RUBY_IMAGE="amazon/aws-lambda-ruby:3.2" ./invoke-service.sh
   result=$(docker run --rm \
+             --platform linux/amd64 \
              --volume $(pwd):/var/task \
              --env RUBYLIB=/var/task \
              --entrypoint '/var/lang/bin/ruby' \
