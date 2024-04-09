@@ -39,24 +39,25 @@ class PackageRubyBundlePlugin {
     this.serverless.cli.log(message, "ruby-package");
   }
 
+  parseRubyVersion(str) {
+    const match = str.match(/ruby(\d+\.\d+)/);
+
+    if (match) {
+      return `${match[1]}.0`;
+    }
+
+    // If not set, default to 3.3.0
+    return '3.3.0';
+  }
+
   rubyVersion() {
     // RbConfig::CONFIG['ruby_version']
-    switch (this.serverless.service.provider.runtime) {
-      case 'ruby2.7':
-        return '2.7.0';
-      default:
-        return '3.2.0';
-    }
+    return this.parseRubyVersion(this.serverless.service.provider.runtime);
   }
 
   extensionApiVersion() {
     // Gem.extension_api_version
-    switch (this.serverless.service.provider.runtime) {
-      case 'ruby2.7':
-        return '2.7.0';
-      default:
-        return '3.2.0';
-    }
+    return this.parseRubyVersion(this.serverless.service.provider.runtime);
   }
 
   beforePackage(){
@@ -140,7 +141,7 @@ class PackageRubyBundlePlugin {
   }
 
   warnOnUnsupportedRuntime(){
-    const runtimes = ['ruby2.7', 'ruby3.2'];
+    const runtimes = ['ruby2.7', 'ruby3.2', 'ruby3.3'];
 
     if (this.config.debug){
       this.log(`platform: ${process.platform}`);
