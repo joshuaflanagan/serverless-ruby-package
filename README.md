@@ -140,7 +140,7 @@ yarn test               # run the automated test suite
 ### Troubleshooting the demo_service
 
 * Make sure the version of bundler specified in the demo_service Gemfile.lock
-is compatible with the version installed in the `amazon/aws-lambda-ruby:3.2`
+is compatible with the version installed in the `amazon/aws-lambda-ruby:3.3`
 image.
 
 * Make sure you can invoke the function n in the docker image:

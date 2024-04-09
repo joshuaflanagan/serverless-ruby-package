@@ -41,29 +41,22 @@ class PackageRubyBundlePlugin {
 
   rubyVersion() {
     // RbConfig::CONFIG['ruby_version']
-    switch (this.serverless.service.provider.runtime) {
-      case 'ruby2.7':
-        return '2.7.0';
-      default:
-        return '3.2.0';
-    }
-  }
+    const runtime_version = this.serverless.service.provider.runtime
+    const match = runtime_version.match(/ruby(\d+\.\d+)/);
 
-  extensionApiVersion() {
-    // Gem.extension_api_version
-    switch (this.serverless.service.provider.runtime) {
-      case 'ruby2.7':
-        return '2.7.0';
-      default:
-        return '3.2.0';
+    if (match) {
+      return `${match[1]}.0`;
     }
+
+    // If not set, default to 3.3.0
+    return '3.3.0';
   }
 
   beforePackage(){
     this.warnOnUnsupportedRuntime();
 
     const gemRoot = `vendor/bundle/ruby/${this.rubyVersion()}`;
-    const extensionDir = `${gemRoot}/extensions/x86_64-linux/${this.extensionApiVersion()}`;
+    const extensionDir = `${gemRoot}/extensions/x86_64-linux/${this.rubyVersion()}`;
 
     const excludeGemTests = true; //TODO: make configurable
     const identifyGemsScript = `
@@ -140,7 +133,7 @@ class PackageRubyBundlePlugin {
   }
 
   warnOnUnsupportedRuntime(){
-    const runtimes = ['ruby2.7', 'ruby3.2'];
+    const runtimes = ['ruby2.7', 'ruby3.2', 'ruby3.3'];
 
     if (this.config.debug){
       this.log(`platform: ${process.platform}`);

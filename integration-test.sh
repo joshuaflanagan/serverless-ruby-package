@@ -42,6 +42,7 @@ pushd __tests__/demo_service
 npm install --no-save serverless-ruby-*.tgz
 
 echo "## RUNNING RUBY VERSION TESTS"
+test_version "3.3"
 test_version "3.2"
 test_version "2.7"
 
