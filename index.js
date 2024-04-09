@@ -39,8 +39,10 @@ class PackageRubyBundlePlugin {
     this.serverless.cli.log(message, "ruby-package");
   }
 
-  parseRubyVersion(str) {
-    const match = str.match(/ruby(\d+\.\d+)/);
+  rubyVersion() {
+    // RbConfig::CONFIG['ruby_version']
+    const runtime_version = this.serverless.service.provider.runtime
+    const match = runtime_version.match(/ruby(\d+\.\d+)/);
 
     if (match) {
       return `${match[1]}.0`;
@@ -50,21 +52,11 @@ class PackageRubyBundlePlugin {
     return '3.3.0';
   }
 
-  rubyVersion() {
-    // RbConfig::CONFIG['ruby_version']
-    return this.parseRubyVersion(this.serverless.service.provider.runtime);
-  }
-
-  extensionApiVersion() {
-    // Gem.extension_api_version
-    return this.parseRubyVersion(this.serverless.service.provider.runtime);
-  }
-
   beforePackage(){
     this.warnOnUnsupportedRuntime();
 
     const gemRoot = `vendor/bundle/ruby/${this.rubyVersion()}`;
-    const extensionDir = `${gemRoot}/extensions/x86_64-linux/${this.extensionApiVersion()}`;
+    const extensionDir = `${gemRoot}/extensions/x86_64-linux/${this.rubyVersion()}`;
 
     const excludeGemTests = true; //TODO: make configurable
     const identifyGemsScript = `
