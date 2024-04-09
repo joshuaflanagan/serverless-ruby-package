@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.3.0
+
+Default to ruby 3.3.
+
+Allow more flexibility for ruby point releases.
+Remove support for ruby 2.5 runtime. If you need ruby 2.5 support, you can
+continue to use an older version of the package.
+
 ## 3.2.0
 
 Default to ruby 3.2.
