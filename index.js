@@ -119,17 +119,23 @@ class PackageRubyBundlePlugin {
     const localPath = this.serverless.config.servicePath;
     const imageTag = this.serverless.service.provider.runtime.slice(-3);
     const dockerImage = `amazon/aws-lambda-ruby:${imageTag}`;
-    const command = `docker run --rm \
-                                --volume "${localPath}:/var/task" \
-                                --entrypoint '/bin/bash' \
-                                ${dockerImage} \
-                                '/var/task/node_modules/serverless-ruby-package/build-gems.sh'`
+    const default_command = `docker run --rm \
+                                        --volume "${localPath}:/var/task" \
+                                        --entrypoint '/bin/bash' \
+                                        ${dockerImage} \
+                                        '/var/task/node_modules/serverless-ruby-package/build-gems.sh'`
+    const command = process.env.SRP_DOCKER_COMMAND || default_command;
 
     if (this.config.debug){
+      this.log(`local path: ${localPath}`);
+      this.log(`image tag: ${imageTag}`);
       this.log(`docker image: ${dockerImage}`);
-      this.log(`command: ${command}`);
+      this.log(`docker command: ${command}`);
     }
-    execSync(command)
+    const output = execSync(command)
+    if (this.config.debug) {
+      this.log(`docker command output: ${output}`);
+    }
   }
 
   warnOnUnsupportedRuntime(){
