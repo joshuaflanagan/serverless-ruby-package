@@ -73,9 +73,16 @@ class PackageRubyBundlePlugin {
       puts JSON.generate(details.sort_by{|x| x[:name]})
     `
 
+    let whitelist_provider
+    if (this.serverless.service.package.hasOwnProperty('patterns')){
+      whitelist_provider = this.serverless.service.package.patterns
+    }else if (this.serverless.service.package.hasOwnProperty('include')){
+      whitelist_provider = this.serverless.service.package.include
+    }
+
     this.serverless.service.package.excludeDevDependencies = false; // only relevant to nodejs
     this.serverless.service.package.exclude = ["**"]; // force whitelist
-    this.serverless.service.package.include.push("vendor/bundle/bundler/**"); // bundler standalone files
+    whitelist_provider.push("vendor/bundle/bundler/**"); // bundler standalone files
 
     const gemFilePath = path.join(this.serverless.config.servicePath, "Gemfile");
     const bundleEnv = Object.assign({
@@ -97,19 +104,19 @@ class PackageRubyBundlePlugin {
     }
 
     gems.forEach((gem) =>{
-      this.serverless.service.package.include.push(`${gemRoot}${gem.path}/**`);
+      whitelist_provider.push(`${gemRoot}${gem.path}/**`);
       if (gem.extensions){
-        this.serverless.service.package.include.push(`${extensionDir}/${gem.name}/**`);
+        whitelist_provider.push(`${extensionDir}/${gem.name}/**`);
       }
 
       // includes that start with a ! are treated as excludes when evaluating,
       // but are ordered along with the includes. If these patterns were
       // specified as excludes, they would be evaluated first, and then the
       // includes on the gem paths would bring them back.
-      this.serverless.service.package.include.push(`!${gemRoot}${gem.path}/.git/**`);
+      whitelist_provider.push(`!${gemRoot}${gem.path}/.git/**`);
       if (excludeGemTests) {
-        this.serverless.service.package.include.push(`!${gemRoot}${gem.path}/test/**`);
-        this.serverless.service.package.include.push(`!${gemRoot}${gem.path}/spec/**`);
+        whitelist_provider.push(`!${gemRoot}${gem.path}/test/**`);
+        whitelist_provider.push(`!${gemRoot}${gem.path}/spec/**`);
       }
     });
   }
